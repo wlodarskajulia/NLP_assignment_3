@@ -25,18 +25,28 @@ class AGNewsDataset(Dataset):
         """
         return len(self.texts)
 
-    def __getitem__(self, idx: int) -> tuple[torch.Tensor, torch.Tensor]:
-        """
-        Returns one example.
-        """
-        tokens = basic_text_cleaning(self.texts.iloc[idx])
-        seq = text_to_sequence(tokens, self.vocab)
+    def __getitem__(self, idx):
+        text = self.texts.iloc[idx]
+        label = self.labels[idx]
 
-        seq = seq[:self.max_len]
-        padding = [0] * (self.max_len - len(seq))
-        seq = seq + padding
+        # tokenizer does several things at once:
+        # 1. splits into tokens
+        # 2. converts tokens to integers (IDs)
+        # 3. pads/truncates to max_len
+        # 4. creates attention_mask
+        encoding = self.tokenizer(
+            text,
+            truncation=True,
+            padding="max_length",
+            max_length=self.max_len,
+            return_tensors="pt"
+        )
 
-        return torch.tensor(seq, dtype=torch.long), torch.tensor(self.labels.iloc[idx] - 1, dtype=torch.long)
+        return {
+            "input_ids": encoding["input_ids"].squeeze(),    # token IDs
+            "attention_mask": encoding["attention_mask"].squeeze(),  # 1 if real token, 0 if padded
+            "label": torch.tensor(label, dtype=torch.long)
+        }
 
 def make_loaders(X_train, y_train, X_dev, y_dev, X_test, y_test, vocab, max_len: int, batch_size: int = 64):
     train_ds = AGNewsDataset(X_train, y_train, vocab, max_len)
