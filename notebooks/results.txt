@@ -1,0 +1,6 @@
+
+Fine-tuning distilbert-base-uncased on AG News …
+
+Epoch  Train Loss  Train Acc  Train F1  Dev Loss  Dev Acc  Dev F1
+------------------------------------------------------------------------
+    1      0.3168     0.8955    0.8958    0.1725   0.9416  0.9416
