@@ -10,12 +10,9 @@ src/:
 - training_loop.py
 """
 
-from .training_loop import train_model
-from .CNN_model import build_cnn
-from .LSTM_model import build_lstm
-from .dataset import make_loaders
-from .evaluation import evaluate
-from .plot_helpers import plot_confusion_matrix, plot_learning_curve
+from .dataset import AGNewsDataset, make_loaders
+from .evaluation import evaluate_transformer
+from .plot_helpers import plot_confusion_matrix, plot_learning_curves
 from .preprocessing import (
     basic_text_cleaning,
     create_vocabulary,

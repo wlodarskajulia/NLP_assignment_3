@@ -1,14 +1,25 @@
 import matplotlib.pyplot as plt
 
-def plot_learning_curve(train_losses, dev_f1s, title):
-    epochs = range(1, len(train_losses) + 1)
-
-    plt.figure()
-    plt.plot(epochs, train_losses, label="Train Loss")
-    plt.plot(epochs, dev_f1s, label="Dev Macro-F1")
-    plt.title(title)
-    plt.xlabel("Epoch")
-    plt.legend()
+def plot_learning_curves(history, title="Transformer Learning Curves"):
+    epochs_ran = range(1, len(history["train_loss"]) + 1)
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+ 
+    axes[0].plot(epochs_ran, history["train_loss"], label="Train Loss", marker="o")
+    axes[0].plot(epochs_ran, history["dev_loss"],   label="Dev Loss",   marker="o")
+    axes[0].set_title("Loss")
+    axes[0].set_xlabel("Epoch")
+    axes[0].set_ylabel("Cross-entropy Loss")
+    axes[0].legend()
+ 
+    axes[1].plot(epochs_ran, history["train_f1"], label="Train Macro-F1", marker="o")
+    axes[1].plot(epochs_ran, history["dev_f1"],   label="Dev Macro-F1",   marker="o")
+    axes[1].set_title("Macro-F1")
+    axes[1].set_xlabel("Epoch")
+    axes[1].set_ylabel("Macro-F1")
+    axes[1].legend()
+ 
+    fig.suptitle(title, fontsize=13)
+    plt.tight_layout()
     plt.show()
 
 def plot_confusion_matrix(cm, title):
